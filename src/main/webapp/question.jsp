@@ -9,26 +9,28 @@
     .answers { margin-bottom: 20px; }
     .stats { background: #e0f8ff; padding: 10px; border-radius: 5px; }
     button { background: black; color: white; padding: 8px 15px; border: none; cursor: pointer; }
+    input[type="radio"] { margin-right: 10px; }
+    label { display: block; margin-bottom: 10px; font-size: 16px; }
   </style>
 </head>
 <body>
 
 <!-- Question -->
 <div class="question">
-  ${question.text}
+  ${state.question}
 </div>
 
-<!-- Form with answers -->
-<form action="answer" method="post">
+<!-- Form with radio buttons -->
+<form method="post" action="game">
   <div class="answers">
-    <c:forEach var="answer" items="${question.answers}">
+    <c:forEach var="entry" items="${state.options}">
       <label>
-        <input type="radio" name="choice" value="${answer.id}" required>
-          ${answer.text}
-      </label><br/>
+        <input type="radio" name="next" value="${entry.value}" required>
+          ${entry.key}
+      </label>
     </c:forEach>
   </div>
-  <button type="submit">Відповісти</button>
+  <button type="submit">ВІДПОВІСТИ</button>
 </form>
 
 <!-- Stats -->
