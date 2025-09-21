@@ -17,13 +17,13 @@
 
 <!-- Question -->
 <div class="question">
-  ${state.question}
+  ${question}
 </div>
 
 <!-- Form with radio buttons -->
 <form method="post" action="game">
   <div class="answers">
-    <c:forEach var="entry" items="${state.options}">
+    <c:forEach var="entry" items="${options}">
       <label>
         <input type="radio" name="next" value="${entry.value}" required>
           ${entry.key}

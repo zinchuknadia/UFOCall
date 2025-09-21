@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>${state.outcome}</title>
+    <title>${outcome}</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
         .outcome { font-size: 28px; margin-bottom: 20px; color: #c00; }
@@ -12,10 +12,13 @@
 </head>
 <body>
 
-<div class="outcome">${state.outcome}</div>
-<div class="message">${state.message}</div>
+<div class="outcome">${outcome}</div>
+<div class="message">${message}</div>
 
-<a href="game" class="restart">Почати знову</a>
+<form method="post" action="game">
+    <input type="hidden" name="next" value="losingMemory">
+    <button type="submit" class="restart">Restart</button>
+</form>
 
 </body>
 </html>

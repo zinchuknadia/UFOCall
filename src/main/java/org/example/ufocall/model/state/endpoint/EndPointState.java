@@ -1,5 +1,6 @@
 package org.example.ufocall.model.state.endpoint;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.example.ufocall.model.state.State;
 
 public abstract class EndPointState implements State {
@@ -19,4 +20,9 @@ public abstract class EndPointState implements State {
         return "/endpoint.jsp";
     }
 
+    @Override
+    public void process(HttpServletRequest request) {
+        request.setAttribute("outcome", getOutcome());
+        request.setAttribute("message", getMessage());
+    }
 }

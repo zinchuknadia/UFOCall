@@ -2,7 +2,7 @@ package org.example.ufocall.model.state.game;
 
 import java.util.Map;
 
-public class OnBridgeIdentity extends GameState {
+public class OnBridgeIdentity extends QuestionState {
     @Override
     public String getQuestion() {
         return "Ви піднялися на капітанський місток. Хто ви?";

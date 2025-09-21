@@ -2,7 +2,7 @@ package org.example.ufocall.model.state.game;
 
 import java.util.Map;
 
-public class LosingMemory extends GameState {
+public class LosingMemory extends QuestionState {
 
     @Override
     public String getQuestion() {
