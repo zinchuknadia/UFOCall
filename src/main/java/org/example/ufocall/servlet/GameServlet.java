@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.example.ufocall.model.GameFlow;
+import org.example.ufocall.model.User;
 import org.example.ufocall.model.state.State;
 
 import java.io.IOException;
@@ -16,10 +17,15 @@ public class GameServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        GameFlow flow = getFlow(session);
+        GameFlow flow = (GameFlow) session.getAttribute("flow");
 
         State state = flow.getCurrentState();
         state.process(request);
+
+        User user = (User) session.getAttribute("user");
+        request.setAttribute("userName", user.getName());
+        request.setAttribute("gameCounter", user.getGamesPlayed());
+
         request.getRequestDispatcher(state.getPage()).forward(request, response);
     }
 
@@ -34,17 +40,11 @@ public class GameServlet extends HttpServlet {
 
         State state = flow.getCurrentState();
         state.process(request);
+
+        User user = (User) session.getAttribute("user");
+        request.setAttribute("userName", user.getName());
+        request.setAttribute("gameCounter", user.getGamesPlayed());
+
         request.getRequestDispatcher(state.getPage()).forward(request, response);
-    }
-
-    private GameFlow getFlow(HttpSession session) {
-        GameFlow flow = (GameFlow) session.getAttribute("flow");
-
-        if (flow == null) {
-            flow = new GameFlow();
-            session.setAttribute("flow", flow);
-        }
-
-        return flow;
     }
 }
