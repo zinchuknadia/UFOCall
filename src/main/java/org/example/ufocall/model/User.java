@@ -1,6 +1,10 @@
 package org.example.ufocall.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class User {
+    private static final Logger logger = LoggerFactory.getLogger(User.class);
     private String name;
     private int gamesPlayed = 0;
     private GameFlow gameFlow;
@@ -22,6 +26,7 @@ public class User {
 
     public void incrementGamesPlayed() {
         this.gamesPlayed++;
+        logger.debug("Incremented gamesPlayed {}", this.gamesPlayed);
     }
 
     public GameFlow getGameFlow() {
