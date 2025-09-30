@@ -6,9 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.ufocall.model.GameFlow;
 import org.example.ufocall.model.User;
-import org.example.ufocall.model.state.State;
+import org.example.ufocall.utils.GameService;
 
 import java.io.IOException;
 
@@ -17,34 +16,35 @@ public class GameServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        GameFlow flow = (GameFlow) session.getAttribute("flow");
-
-        State state = flow.getCurrentState();
-        state.process(request);
-
         User user = (User) session.getAttribute("user");
-        request.setAttribute("userName", user.getName());
-        request.setAttribute("gameCounter", user.getGamesPlayed());
 
-        request.getRequestDispatcher(state.getPage()).forward(request, response);
+        stateProcessRequest(request, user);
+        setUserAttributes(request, user);
+
+        String page = GameService.getStatePage(user);
+        request.getRequestDispatcher(page).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        GameFlow flow = (GameFlow) session.getAttribute("flow");
-
-        String nextKey = request.getParameter("next");
-        if (nextKey != null) {
-            flow.transition(nextKey);
-        }
-
-        State state = flow.getCurrentState();
-        state.process(request);
-
         User user = (User) session.getAttribute("user");
+
+        String nextStateKey = request.getParameter("next");
+        GameService.changeState(user, nextStateKey);
+
+        stateProcessRequest(request, user);
+        setUserAttributes(request, user);
+
+        String page = GameService.getStatePage(user);
+        request.getRequestDispatcher(page).forward(request, response);
+    }
+
+    private void stateProcessRequest(HttpServletRequest request, User user) {
+        GameService.getState(user).process(request);
+    }
+
+    private void setUserAttributes(HttpServletRequest request, User user) {
         request.setAttribute("userName", user.getName());
         request.setAttribute("gameCounter", user.getGamesPlayed());
-
-        request.getRequestDispatcher(state.getPage()).forward(request, response);
     }
 }

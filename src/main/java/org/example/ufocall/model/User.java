@@ -3,6 +3,7 @@ package org.example.ufocall.model;
 public class User {
     private String name;
     private int gamesPlayed = 0;
+    private GameFlow gameFlow;
 
     public User() {
     }
@@ -21,5 +22,13 @@ public class User {
 
     public void incrementGamesPlayed() {
         this.gamesPlayed++;
+    }
+
+    public GameFlow getGameFlow() {
+        return gameFlow;
+    }
+
+    public void setGameFlow(GameFlow gameFlow) {
+        this.gameFlow = gameFlow;
     }
 }

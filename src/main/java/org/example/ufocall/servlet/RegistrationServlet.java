@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.ufocall.model.GameFlow;
 import org.example.ufocall.model.User;
+import org.example.ufocall.utils.UserService;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class RegistrationServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         User user = (User) session.getAttribute("user");
-        if (user != null) {
+        if (UserService.userExists(user)) {
             req.setAttribute("userName", user.getName());
         }
 
@@ -30,23 +30,15 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
 
-        GameFlow flow = new GameFlow();
-        session.setAttribute("flow", flow);
-
         User user = (User) session.getAttribute("user");
+        String userName = req.getParameter("userName");
 
-        if (user == null) {
-            String userName = req.getParameter("userName");
-            user = new User();
-            user.setName(userName);
-            session.setAttribute("user", user);
-        } else if (!user.getName().equals(req.getParameter("userName"))) {
-            User newUser = new User();
-            newUser.setName(req.getParameter("userName"));
-            session.setAttribute("user", newUser);
+        if (!UserService.userValidate(user, userName)) {
+            user = UserService.createUser(userName);
         }
+        UserService.setNewGame(user);
 
-        ((User) session.getAttribute("user")).incrementGamesPlayed();
+        session.setAttribute("user", user);
         resp.sendRedirect("game");
     }
 
