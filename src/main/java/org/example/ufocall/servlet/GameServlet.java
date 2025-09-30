@@ -6,45 +6,49 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.example.ufocall.model.GameFlow;
-import org.example.ufocall.model.state.State;
+import org.example.ufocall.model.User;
+import org.example.ufocall.utils.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 @WebServlet("/game")
 public class GameServlet extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(GameServlet.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        GameFlow flow = getFlow(session);
+        User user = (User) session.getAttribute("user");
 
-        State state = flow.getCurrentState();
-        state.process(request);
-        request.getRequestDispatcher(state.getPage()).forward(request, response);
+        stateProcessRequest(request, user);
+        setUserAttributes(request, user);
+
+        String page = GameService.getStatePage(user);
+        request.getRequestDispatcher(page).forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        GameFlow flow = (GameFlow) session.getAttribute("flow");
+        User user = (User) session.getAttribute("user");
 
-        String nextKey = request.getParameter("next");
-        if (nextKey != null) {
-            flow.transition(nextKey);
-        }
+        String nextStateKey = request.getParameter("next");
+        GameService.changeState(user, nextStateKey);
 
-        State state = flow.getCurrentState();
-        state.process(request);
-        request.getRequestDispatcher(state.getPage()).forward(request, response);
+        stateProcessRequest(request, user);
+        setUserAttributes(request, user);
+
+        String page = GameService.getStatePage(user);
+        request.getRequestDispatcher(page).forward(request, response);
     }
 
-    private GameFlow getFlow(HttpSession session) {
-        GameFlow flow = (GameFlow) session.getAttribute("flow");
+    private void stateProcessRequest(HttpServletRequest request, User user) {
+        GameService.getState(user).process(request);
+    }
 
-        if (flow == null) {
-            flow = new GameFlow();
-            session.setAttribute("flow", flow);
-        }
-
-        return flow;
+    private void setUserAttributes(HttpServletRequest request, User user) {
+        request.setAttribute("userName", user.getName());
+        request.setAttribute("gameCounter", user.getGamesPlayed());
+        logger.debug("User attributes set");
     }
 }

@@ -6,7 +6,7 @@ public class LosingMemory extends QuestionState {
 
     @Override
     public String getQuestion() {
-        return "Ви втрачаєте пам'ять. Прийняти виклик НЛО?";
+        return "You are losing memory. Accept the UFO challenge?";
     }
 
     @Override

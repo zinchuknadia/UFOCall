@@ -5,7 +5,7 @@ import java.util.Map;
 public class OnBridgeIdentity extends QuestionState {
     @Override
     public String getQuestion() {
-        return "Ви піднялися на капітанський місток. Хто ви?";
+        return "You went up the captain's bridge. Who are you?";
     }
 
     @Override
