@@ -32,6 +32,10 @@ public class GameFlow {
         return states.get(currentStateKey);
     }
 
+    public String getCurrentStateKey() {
+        return currentStateKey;
+    }
+
     public void transition(String nextKey) {
         logger.debug("Changing state from {} to {}", currentStateKey, nextKey);
         currentStateKey = nextKey;
