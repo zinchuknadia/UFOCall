@@ -5,7 +5,7 @@ import java.util.Map;
 public class AcceptChallenge extends QuestionState {
     @Override
     public String getQuestion() {
-        return "Ви прийняли виклик. Піднятися на капітанський місток?";
+        return "You accepted challenge. Go up to the captain's bridge?";
     }
 
     @Override
